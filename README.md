@@ -1,9 +1,10 @@
 [![Build Status](https://travis-ci.org/dstnbrkr/VCRURLConnection.png?branch=master)](https://travis-ci.org/dstnbrkr/VCRURLConnection)
 
-# VCRURLConnection
-VCRURLConnection is an iOS and OSX API to record and replay HTTP interactions, inspired by [VCR](https://github.com/vcr/vcr)
+TODO: Update this
 
-> _VCRURLConnection is still in the very early stages of development, all bug reports, feature requests, and general feedback are greatly appreciated!_
+# iOS-VCR
+Originally forked from [VCRURLConnection](https://github.com/dstnbrkr/VCRURLConnection), this package provides VCR functionality for AFNetworking on iOS.
+
 
 ## Recording 
 
