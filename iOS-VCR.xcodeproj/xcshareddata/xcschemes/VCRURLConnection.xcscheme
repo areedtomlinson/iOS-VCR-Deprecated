@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B3B4FBF91ADA178000C997D0"
-               BuildableName = "libVCRURLConnection.a"
-               BlueprintName = "VCRURLConnection"
-               ReferencedContainer = "container:VCRURLConnection.xcodeproj">
+               BuildableName = "libiOS-VCR.a"
+               BlueprintName = "iOS-VCR"
+               ReferencedContainer = "container:iOS-VCR.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,27 +29,27 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B3B4FC031ADA178100C997D0"
-               BuildableName = "VCRURLConnectionTests.xctest"
-               BlueprintName = "VCRURLConnectionTests"
-               ReferencedContainer = "container:VCRURLConnection.xcodeproj">
+               BuildableName = "iOS-VCR.xctest"
+               BlueprintName = "iOS-VCRTests"
+               ReferencedContainer = "container:iOS-VCR.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      buildConfiguration = "Debug">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B3B4FC031ADA178100C997D0"
-               BuildableName = "VCRURLConnectionTests.xctest"
-               BlueprintName = "VCRURLConnectionTests"
-               ReferencedContainer = "container:VCRURLConnection.xcodeproj">
+               BuildableName = "iOS-VCR.xctest"
+               BlueprintName = "iOS-VCRTests"
+               ReferencedContainer = "container:iOS-VCR.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,46 +57,49 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B3B4FBF91ADA178000C997D0"
-            BuildableName = "libVCRURLConnection.a"
-            BlueprintName = "VCRURLConnection"
-            ReferencedContainer = "container:VCRURLConnection.xcodeproj">
+            BuildableName = "libiOS-VCR.a"
+            BlueprintName = "iOS-VCR"
+            ReferencedContainer = "container:iOS-VCR.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <AdditionalOptions>
+      </AdditionalOptions>
    </TestAction>
    <LaunchAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B3B4FBF91ADA178000C997D0"
-            BuildableName = "libVCRURLConnection.a"
-            BlueprintName = "VCRURLConnection"
-            ReferencedContainer = "container:VCRURLConnection.xcodeproj">
+            BuildableName = "libiOS-VCR.a"
+            BlueprintName = "iOS-VCR"
+            ReferencedContainer = "container:iOS-VCR.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
+      buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B3B4FBF91ADA178000C997D0"
-            BuildableName = "libVCRURLConnection.a"
-            BlueprintName = "VCRURLConnection"
-            ReferencedContainer = "container:VCRURLConnection.xcodeproj">
+            BuildableName = "libiOS-VCR.a"
+            BlueprintName = "iOS-VCR"
+            ReferencedContainer = "container:iOS-VCR.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>
