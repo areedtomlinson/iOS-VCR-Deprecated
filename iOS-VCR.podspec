@@ -15,12 +15,12 @@ Pod::Spec.new do |s|
   #  summary should be tweet-length, and the description more in depth.
   #
 
-  s.name         = "VCRURLConnection"
+  s.name         = "iOS-VCR"
   s.version      = "0.0.1"
-  s.summary      = "A short description of VCRURLConnection."
+  s.summary      = "VCR for AFNetworking on iOS"
 
   s.description  = <<-DESC
-                   A longer description of VCRURLConnection in Markdown format.
+                   Originally forked from VCRURLConnection, this package provides VCR testing support for AFNetworking on iOS.
 
                    * Think: Why did you write this? What is the focus? What does it do?
                    * CocoaPods will be using this to generate tags, and improve search results.
@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
                    * Finally, don't worry about the indent, CocoaPods strips it!
                    DESC
 
-  s.homepage     = "http://EXAMPLE/VCRURLConnection"
+  s.homepage     = "https://github.com/areedtomlinson/iOS-VCR"
   # s.screenshots  = "www.example.com/screenshots_1.gif", "www.example.com/screenshots_2.gif"
 
 
@@ -53,7 +53,7 @@ Pod::Spec.new do |s|
   #  profile URL.
   #
 
-  s.author             = { "Reed Tomlinson" => "dev1@carbonobjects.com" }
+  s.author             = { "Reed Tomlinson" => "reed.tomlinson@getbellhops.com" }
   # Or just: s.author    = "Reed Tomlinson"
   # s.authors            = { "Reed Tomlinson" => "dev1@carbonobjects.com" }
   # s.social_media_url   = "http://twitter.com/Reed Tomlinson"
@@ -79,7 +79,7 @@ Pod::Spec.new do |s|
   #
 
   # s.source       = { :git => "http://EXAMPLE/VCRURLConnection.git", :tag => "0.0.1" }
-  s.source       = { :git => "https://github.com/areedtomlinson/VCRURLConnection.git", :tag => "0.0.1" }
+  s.source       = { :git => "https://github.com/areedtomlinson/iOS-VCR.git", :tag => "0.0.1" }
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
@@ -90,7 +90,7 @@ Pod::Spec.new do |s|
   #
 
 # s.source_files  = "Classes", "Classes/**/*.{h,m}"
-  s.source_files  = "VCRURLConnection/*.{h,m}"
+  s.source_files  = "iOS-VCR/*.{h,m}"
   s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
