@@ -119,7 +119,13 @@
     
     NSError *error = self.error;
     if (error) {
-        dictionary[@"error"] = [VCRError JSONForError:error];
+        @try {
+            dictionary[@"error"] = [VCRError JSONForError:error];
+        }
+        @catch(NSException *exception) {
+            // Error encoding JSON. Put in placeholder value.
+            dictionary[@"error"] = @"";
+        }
     }
     
     VCROrderedMutableDictionary *sortedDict = [VCROrderedMutableDictionary dictionaryWithCapacity:[infoDict count]];
