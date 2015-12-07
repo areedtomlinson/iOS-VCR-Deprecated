@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/dstnbrkr/VCRURLConnection.png?branch=master)](https://travis-ci.org/dstnbrkr/VCRURLConnection)
 
-TODO: Update this
+## OUTDATED: This package is now maintained [here](https://github.com/bellhops/iOS-VCR)
 
 # iOS-VCR
 Originally forked from [VCRURLConnection](https://github.com/dstnbrkr/VCRURLConnection), this package provides VCR functionality for AFNetworking on iOS.
