@@ -25,6 +25,7 @@
 #import "VCRCassette.h"
 #import "VCRCassetteManager.h"
 #import "VCRRecording.h"
+#import "VCRRequestKey.h"
 #import "VCR.h"
 
 @implementation VCRReplayingURLProtocol
@@ -50,9 +51,9 @@
         NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:url
                                                                   statusCode:recording.statusCode
                                                                  HTTPVersion:@"HTTP/1.1"
-                                                                headerFields:recording.headerFields];
+                                                                headerFields:recording.responseHeaderFields];
         [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
-        [self.client URLProtocol:self didLoadData:recording.data];
+        [self.client URLProtocol:self didLoadData:recording.responseData];
         [self.client URLProtocolDidFinishLoading:self];
     } else {
         [self.client URLProtocol:self didFailWithError:error];
@@ -60,7 +61,11 @@
 }
 
 - (void)stopLoading {
-    // do nothing
+    // Pop request from cassette stack, if it exists:
+    VCRRecording *recording = [[self class] recordingForRequest:self.request];
+    VCRRequestKey *key = [VCRRequestKey keyForObject:recording];
+    [[[VCRCassetteManager defaultManager] currentCassette] popTransactionForKey:key];
 }
+
 
 @end

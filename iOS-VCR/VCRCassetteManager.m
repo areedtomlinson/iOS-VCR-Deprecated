@@ -74,7 +74,13 @@
 
 - (void)save:(NSString *)path {
     NSData *data = [self.cassette data];
-    [data writeToFile:path atomically:YES];
+    
+    // Replace instances of "\/" in our data:
+    NSString *str = [[NSString alloc] initWithData:data encoding:NSStringEncodingConversionAllowLossy];
+    str = [str stringByReplacingOccurrencesOfString:@"\\/" withString:@"/"];
+    
+    // And write string to file instead of data, so we can enforce unicode:
+    [str writeToFile:path atomically:YES encoding:NSUnicodeStringEncoding error:nil];
 }
 
 @end

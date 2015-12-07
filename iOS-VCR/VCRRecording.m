@@ -34,22 +34,32 @@
 
 - (id)initWithJSON:(id)json {
     if ((self = [self init])) {
+        NSMutableDictionary *requestJSON = json[@"request"];
+        NSMutableDictionary *responseJSON = json[@"response"];
         
-        self.method = json[@"method"];
+        self.method = requestJSON[@"method"];
         NSAssert(self.method, @"VCRRecording: method is required");
         
-        self.URI = json[@"uri"];
-        NSAssert(self.URI, @"VCRRecording: uri is required");
+        self.URI = requestJSON[@"url"];
+        NSAssert(self.URI, @"VCRRecording: url is required");
 
-        self.statusCode = [json[@"status"] intValue];
+        self.statusCode = [responseJSON[@"code"] intValue];
 
-        self.headerFields = json[@"headers"];
-        if (!self.headerFields) {
-            self.headerFields = [NSDictionary dictionary];
+        self.requestHeaderFields = requestJSON[@"@headers"];
+        if (!self.requestHeaderFields) {
+            self.requestHeaderFields = [NSDictionary dictionary];
         }
         
-        NSString *body = json[@"body"];
-        [self setBody:body];
+        self.responseHeaderFields = responseJSON[@"headers"];
+        if (!self.responseHeaderFields) {
+            self.responseHeaderFields = [NSDictionary dictionary];
+        }
+        
+        NSString *requestBody = requestJSON[@"body"];
+        [self setRequestBody:requestBody];
+        
+        NSString *responseBody = responseJSON[@"body"];
+        [self setResponseBody:responseBody];
         
         if (json[@"error"]) {
             self.error = [[VCRError alloc] initWithJSON:json[@"error"]];
@@ -61,7 +71,7 @@
 - (BOOL)isEqual:(VCRRecording *)recording {
     return [self.method isEqualToString:recording.method] &&
            [self.URI isEqualToString:recording.URI] &&
-           [self.body isEqualToString:recording.body];
+           [self.requestBody isEqualToString:recording.requestBody];
 }
 
 - (NSUInteger)hash {
@@ -69,7 +79,7 @@
     NSUInteger hash = 1;
     hash = prime * hash + [self.method hash];
     hash = prime * hash + [self.URI hash];
-    hash = prime * hash + [self.body hash];
+    hash = prime * hash + [self.responseBody hash];
     return hash;
 }
 
@@ -86,36 +96,72 @@
     return isText;
 }
 
-- (void)setBody:(id)body
+- (void)setRequestBody:(id)body
 {
     if ([body isKindOfClass:[NSDictionary class]]) {
-        self.data = [NSJSONSerialization dataWithJSONObject:body options:0 error:nil];
+        self.requestData = [NSJSONSerialization dataWithJSONObject:body options:0 error:nil];
     } else if ([self isText]) {
-        self.data = [body dataUsingEncoding:NSUTF8StringEncoding];
+        self.requestData = [body dataUsingEncoding:NSUTF8StringEncoding];
     } else if ([body isKindOfClass:[NSString class]]) {
-        self.data = [[NSData alloc] initWithBase64Encoding:body];
+        self.requestData = [[NSData alloc] initWithBase64Encoding:body];
     }
 }
 
-- (NSString *)body {
-    if ([self isText]) {
-        return [[NSString alloc] initWithData:self.data encoding:NSUTF8StringEncoding];
-    } else {
-        return [self.data base64Encoding];
+- (void)setResponseBody:(id)body
+{
+    if ([body isKindOfClass:[NSDictionary class]]) {
+        self.responseData = [NSJSONSerialization dataWithJSONObject:body options:0 error:nil];
+    } else if ([self isText]) {
+        self.responseData = [body dataUsingEncoding:NSUTF8StringEncoding];
+    } else if ([body isKindOfClass:[NSString class]]) {
+        self.responseData = [[NSData alloc] initWithBase64Encoding:body];
     }
+}
+
+- (NSString *)requestBody {
+    if ([self isText]) {
+        return [[NSString alloc] initWithData:self.requestData encoding:NSUTF8StringEncoding];
+    } else {
+        return [self.requestData base64Encoding];
+    }
+}
+
+- (NSString *)responseBody {
+    if ([self isText]) {
+        return [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+    } else {
+        return [self.responseData base64Encoding];
+    }
+}
+
+- (id)requestJSON {
+    NSDictionary *infoDict = @{
+                               @"url": self.URI,
+                               @"method": self.method,
+                               @"headers": self.requestHeaderFields,
+                               @"body": self.requestBody
+                               };
+    VCROrderedMutableDictionary *dictionary = [VCROrderedMutableDictionary dictionaryWithDictionary:infoDict];
+    return dictionary;
+}
+
+- (id)responseJSON {
+    NSDictionary *infoDict = @{
+                               @"headers": self.responseHeaderFields,
+                               @"url": self.URI,
+                               @"code": @(self.statusCode),
+                               @"body": self.responseBody
+                               };
+    VCROrderedMutableDictionary *dictionary = [VCROrderedMutableDictionary dictionaryWithDictionary:infoDict];
+    return dictionary;
 }
 
 - (id)JSON {
-    NSDictionary *infoDict = @{@"method": self.method, @"status": @(self.statusCode), @"uri": self.URI};
+    NSDictionary *infoDict = @{
+                               @"request": self.requestJSON,
+                               @"response": self.responseJSON
+                               };
     VCROrderedMutableDictionary *dictionary = [VCROrderedMutableDictionary dictionaryWithDictionary:infoDict];
-    
-    if (self.headerFields) {
-        dictionary[@"headers"] = self.headerFields;
-    }
-    
-    if (self.body) {
-        dictionary[@"body"] = self.body;
-    }
     
     NSError *error = self.error;
     if (error) {
@@ -138,7 +184,7 @@
 
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<VCRRecording %@ %@, data length %li>", self.method, self.URI, (unsigned long)[self.data length]];
+    return [NSString stringWithFormat:@"<VCRRecording %@ %@, data length %li>", self.method, self.URI, (unsigned long)[self.responseData length]];
 }
 
 - (NSHTTPURLResponse *)HTTPURLResponse {
@@ -146,7 +192,7 @@
     return [[NSHTTPURLResponse alloc] initWithURL:url
                                        statusCode:_statusCode
                                       HTTPVersion:@"HTTP/1.1"
-                                     headerFields:_headerFields];
+                                     headerFields:_responseHeaderFields];
 }
 
 @end

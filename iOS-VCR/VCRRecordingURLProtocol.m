@@ -54,6 +54,9 @@ static NSString * const VCRIsRecordingRequestKey = @"VCR_recording";
     VCRRecording *recording = [[VCRRecording alloc] init];
     recording.method = request.HTTPMethod;
     recording.URI = [[request URL] absoluteString];
+    recording.requestData = request.HTTPBody;
+    recording.requestData = [self bodyFromRequest:request];
+    recording.requestHeaderFields = request.allHTTPHeaderFields;
     self.recording = recording;
     
     NSMutableURLRequest *mutableRequest = [request mutableCopy];
@@ -68,31 +71,65 @@ static NSString * const VCRIsRecordingRequestKey = @"VCR_recording";
 #pragma mark = NSURLConnectionDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response {
-    self.recording.headerFields = response.allHeaderFields;
+    self.recording.responseHeaderFields = response.allHeaderFields;
     self.recording.statusCode = response.statusCode;
     [self.client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    if (self.recording.data) {
-        NSMutableData *currentData = [NSMutableData dataWithData:self.recording.data];
+    if (self.recording.responseData) {
+        NSMutableData *currentData = [NSMutableData dataWithData:self.recording.responseData];
         [currentData appendData:data];
-        self.recording.data = currentData;
+        self.recording.responseData = currentData;
     } else {
-        self.recording.data = data;
+        self.recording.responseData = data;
     }
     [self.client URLProtocol:self didLoadData:data];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     self.recording.error = error;
-    [[[VCRCassetteManager defaultManager] currentCassette] addRecording:self.recording];
+    if([VCR isRecording]) {
+        [[[VCRCassetteManager defaultManager] currentCassette] addRecording:self.recording];
+    }
     [self.client URLProtocol:self didFailWithError:error];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    [[[VCRCassetteManager defaultManager] currentCassette] addRecording:self.recording];
+    if([VCR isRecording]) {
+        [[[VCRCassetteManager defaultManager] currentCassette] addRecording:self.recording];
+    }
     [self.client URLProtocolDidFinishLoading:self];
+}
+
+- (NSData *)bodyFromRequest:(NSURLRequest *)request {
+    if (request.HTTPBodyStream) {
+        NSInputStream *stream = request.HTTPBodyStream;
+        NSMutableData *data = [NSMutableData data];
+        [stream open];
+        size_t bufferSize = 4096;
+        uint8_t *buffer = malloc(bufferSize);
+        if (buffer == NULL) {
+            [NSException raise:@"NocillaMallocFailure" format:@"Could not allocate %zu bytes to read HTTPBodyStream", bufferSize];
+        }
+        while ([stream hasBytesAvailable]) {
+            NSInteger bytesRead = [stream read:buffer maxLength:bufferSize];
+            if (bytesRead > 0) {
+                NSData *readData = [NSData dataWithBytes:buffer length:bytesRead];
+                [data appendData:readData];
+            } else if (bytesRead < 0) {
+                [NSException raise:@"NocillaStreamReadError" format:@"An error occurred while reading HTTPBodyStream (%ld)", (long)bytesRead];
+            } else if (bytesRead == 0) {
+                break;
+            }
+        }
+        free(buffer);
+        [stream close];
+        
+        return data;
+    }
+    
+    return request.HTTPBody;
 }
 
 @end

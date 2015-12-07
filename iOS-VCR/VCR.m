@@ -70,15 +70,27 @@ static BOOL _VCRIsReplaying;
     return _VCRIsReplaying;
 }
 
-+ (void)start {
++ (void)startAll {
     [self setRecording:YES];
     [self setReplaying:YES];
+}
+
++ (void)startReplaying {
+    [self setRecording:NO];
+    [self setReplaying:YES];
+}
+
++ (void)startRecording {
+    [self setRecording:YES];
+    [self setReplaying:NO];
 }
 
 + (void)stop {
     [self setRecording:NO];
     [self setReplaying:NO];
 }
+
+
 
 + (void)save:(NSString *)path {
     return [[VCRCassetteManager defaultManager] save:path];
